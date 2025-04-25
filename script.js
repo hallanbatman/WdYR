@@ -1,7 +1,9 @@
 // Celebrity Crush Game - Full JS with Gender Toggle, Age Filter, and Non-Repeating Logic
 
-// This points to your local backend API
-const apiUrl = "http://localhost:3000/api/popular";
+// Determine backend URL dynamically
+const apiUrl = window.location.hostname.includes("herokuapp")
+  ? "https://wdyr-4b67580946ff.herokuapp.com"
+  : "http://localhost:3000";
 
 const shownCelebs = new Set();
 let selectedGender = "both"; // default option
@@ -12,7 +14,6 @@ function getGenderCode(gender) {
   return null; // for 'both'
 }
 
-// Helper to calculate age from birthday string
 function calculateAge(birthday) {
   const birthDate = new Date(birthday);
   const today = new Date();
@@ -24,11 +25,10 @@ function calculateAge(birthday) {
   return age;
 }
 
-// Get random celebrity based on selected gender
 async function getRandomCelebrity() {
   for (let i = 0; i < 20; i++) {
     const page = Math.floor(Math.random() * 50) + 1;
-    const res = await fetch(`${apiUrl}?page=${page}`); // Updated URL to use /api/popular
+    const res = await fetch(`${apiUrl}/api/popular?page=${page}`);
     const data = await res.json();
 
     let candidates = data.results.filter(p => p.profile_path);
@@ -39,13 +39,11 @@ async function getRandomCelebrity() {
       candidates = candidates.filter(p => p.gender === 2);
     }
 
-    // Filter out previously shown
     candidates = candidates.filter(p => !shownCelebs.has(p.id));
 
-    // Get full details to check age
     for (const person of candidates) {
       try {
-        const detailRes = await fetch(`http://localhost:3000/api/person/${person.id}`); // Correct endpoint
+        const detailRes = await fetch(`${apiUrl}/api/person/${person.id}`);
         const detail = await detailRes.json();
         if (!detail.birthday) continue;
 
@@ -64,10 +62,9 @@ async function getRandomCelebrity() {
       }
     }
   }
-  return null; // If no suitable celeb found
+  return null;
 }
 
-// Load a card with a new celeb
 async function loadCard(cardId) {
   const card = document.getElementById(cardId);
   const celeb = await getRandomCelebrity();
@@ -77,7 +74,6 @@ async function loadCard(cardId) {
     return;
   }
 
-  // Set gender data for later logic
   card.setAttribute('data-gender', celeb.gender);
 
   card.innerHTML = `
@@ -88,7 +84,6 @@ async function loadCard(cardId) {
   shownCelebs.add(celeb.id);
 }
 
-// Setup card click behavior
 function setupVoting() {
   const card1 = document.getElementById("card1");
   const card2 = document.getElementById("card2");
@@ -102,26 +97,22 @@ function setupVoting() {
   });
 }
 
-// Handle gender toggle buttons
 function setupToggleButtons() {
   const buttons = document.querySelectorAll(".tri-state-toggle-button");
   buttons.forEach(button => {
     button.addEventListener("click", async () => {
       const newGender = button.getAttribute("data-gender");
-      if (newGender === selectedGender) return; // No change, do nothing
+      if (newGender === selectedGender) return;
 
-      // Update UI
       buttons.forEach(b => b.classList.remove("active"));
       button.classList.add("active");
 
-      // Update gender selection
       const prevGender = selectedGender;
       selectedGender = newGender;
 
       const card1Gender = document.getElementById("card1").getAttribute('data-gender');
       const card2Gender = document.getElementById("card2").getAttribute('data-gender');
 
-      // Logic: keep card showing current gender, refresh other
       if (selectedGender === "both") {
         if (card1Gender === "1") {
           await loadCard("card2");
@@ -129,7 +120,6 @@ function setupToggleButtons() {
           await loadCard("card1");
         }
       } else {
-        // If switching to male or female, refresh both
         await loadCard("card1");
         await loadCard("card2");
       }
@@ -137,7 +127,6 @@ function setupToggleButtons() {
   });
 }
 
-// Initial load
 loadCard("card1");
 loadCard("card2");
 setupVoting();
