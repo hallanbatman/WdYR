@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Who'd You Rather?</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #111; color: #fff; margin: 0; padding: 0; }
+    header { padding: 0.6em 0; }
+    header img {
+      max-width: 150px;
+      height: auto;
+      margin-bottom: 5px;
+    }
+    .card-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 20px;
+      padding-bottom: 50px;
+    }
+    .card {
+      background: #222;
+      padding: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      width: 350px;
+      margin: 5px;
+    }
+    .card:hover { transform: scale(1.05); }
+    .card img { width: 100%; border-radius: 8px; }
+    .card h3 { margin-top: 0.5rem; }
+
+    .tri-state-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+.tri-state-toggle {
+    background: rgba(0,0,0,0.8);
+    box-shadow: inset 0 2px 8px 0 rgba(165,170,174,0.25);
+    border-radius: 24px;
+    display: inline-block;
+    overflow: hidden;
+    display: inline-flex;
+    flex-direction: row;
+  transition: all 500ms ease; 
+}
+
+.tri-state-toggle-button {
+    border-radius: 22px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    background-color: transparent;
+    border: 0px solid transparent;
+    color: white;
+    cursor: pointer;
+}
+
+.tri-state-toggle-button:hover {
+  background-color: #666;
+}
+
+.tri-state-toggle-button.active {
+  background-color: #7f3e9d;
+  color: #000;
+  font-weight: bold;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <img src="WdYR_Logo.png" alt="Celebrity Crush Logo" />
+  </header>
+
+  <div class="tri-state-toggle">
+    <button class="tri-state-toggle-button" data-gender="female">Female</button>
+    <button class="tri-state-toggle-button active" data-gender="both">Both</button>
+    <button class="tri-state-toggle-button" data-gender="male">Male</button>
+  </div>
+  
+  <div class="card-container">
+    <div class="card" id="card1"></div>
+    <div class="card" id="card2"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
