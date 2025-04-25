@@ -76,27 +76,17 @@
     }
 
     /* Media Queries for Responsive Design */
-
     /* On small screens (max-width: 767px), adjust width of buttons */
     @media screen and (max-width: 767px) {
-      .tri-state-toggle {
-        flex-direction: column; /* Stack the buttons vertically */
-        align-items: center; /* Center the buttons */
-      }
-
+      .tri-state-toggle
       .tri-state-toggle-button {
-        width: 150px; /* Adjust width for small screens */
-        margin-bottom: 10px; /* Space between buttons */
+        width: 100px; /* Adjust width for small screens */
       }
     }
 
     /* On large screens (min-width: 768px), keep the buttons wide */
     @media screen and (min-width: 768px) {
-      .tri-state-toggle {
-        flex-direction: row; /* Arrange buttons horizontally */
-        justify-content: center; /* Align the buttons in the center */
-      }
-
+      .tri-state-toggle
       .tri-state-toggle-button {
         width: 200px; /* Set fixed width for large screens */
       }
