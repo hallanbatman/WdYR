@@ -1,9 +1,9 @@
 // Celebrity Crush Game - Full JS with Gender Toggle, Age Filter, and Non-Repeating Logic
 
 // Determine backend URL dynamically
-const apiUrl = window.location.hostname.includes("herokuapp")
-  ? "https://wdyr-4b67580946ff.herokuapp.com"
-  : "http://localhost:3000";
+const apiUrl = window.location.hostname.includes("localhost")
+  ? "http://localhost:3000"
+  : "https://wdyr-4b67580946ff.herokuapp.com";
 
 const shownCelebs = new Set();
 let selectedGender = "both"; // default option
