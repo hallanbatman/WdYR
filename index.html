@@ -38,25 +38,36 @@
   gap: 0.2rem;
 }
 
+.toggle-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 0 1rem;
+}
+
 .tri-state-toggle {
+    display: flex;
     background: rgba(0,0,0,0.8);
     box-shadow: inset 0 2px 8px 0 rgba(165,170,174,0.25);
     border-radius: 24px;
     display: inline-block;
     overflow: hidden;
-    display: inline-flex;
+    max-width: 600px;
+    width: 100%;
     flex-direction: row;
-  transition: all 500ms ease; 
+    transition: all 500ms ease; 
 }
 
 .tri-state-toggle-button {
+    flex: 1;
     display: flex;
+    min-width: 80px;
+    max-width: 200px;
     border-radius: 22px;
     height: 35px;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    width: 200px;
     background-color: transparent;
     border: 0px solid transparent;
     color: white;
@@ -80,11 +91,13 @@
     <img src="WdYR_Logo.png" alt="Celebrity Crush Logo" />
   </header>
 
+  <div class="toggle-container">
   <div class="tri-state-toggle">
     <button class="tri-state-toggle-button" data-gender="female">Female</button>
     <button class="tri-state-toggle-button active" data-gender="both">Both</button>
     <button class="tri-state-toggle-button" data-gender="male">Male</button>
   </div>
+</div>
   
   <div class="card-container">
     <div class="card" id="card1"></div>
