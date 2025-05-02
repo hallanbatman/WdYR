@@ -1,15 +1,19 @@
-// Celebrity Crush Game - Full JS with Gender Toggle, Age Filter, and Non-Repeating Logic
-
-// Determine backend URL
 const apiUrl = "https://wdyr-4b67580946ff.herokuapp.com";
 
 const shownCelebs = new Set();
-let selectedGender = "both"; // default option
+let selectedGender = "both";
+let maxPages = 50; // Default value
+let selectionCount = 0;
+let lastSelectionTime = Date.now();
+let idleTimer = null;
+const IDLE_THRESHOLD = 10000; // 10 seconds of inactivity
+const MAX_SELECTIONS = 20;
+let lastSelectedCardId = null; // Track the last selected card
 
 function getGenderCode(gender) {
   if (gender === "female") return 1;
   if (gender === "male") return 2;
-  return null; // for 'both'
+  return null;
 }
 
 function calculateAge(birthday) {
@@ -24,8 +28,10 @@ function calculateAge(birthday) {
 }
 
 async function getRandomCelebrity() {
+  let lastValidCeleb = null;
+  
   for (let i = 0; i < 20; i++) {
-    const page = Math.floor(Math.random() * 50) + 1;
+    const page = Math.floor(Math.random() * maxPages) + 1;
     const res = await fetch(`${apiUrl}/api/popular?page=${page}`);
     const data = await res.json();
 
@@ -47,18 +53,26 @@ async function getRandomCelebrity() {
 
         const age = calculateAge(detail.birthday);
         if (age >= 21) {
-          return {
+          const celeb = {
             name: person.name,
             image: `https://image.tmdb.org/t/p/w500${person.profile_path}`,
             id: person.id,
             gender: person.gender,
             age
           };
+          lastValidCeleb = celeb;
+          shownCelebs.add(person.id);
+          return celeb;
         }
       } catch (e) {
         console.warn("Error fetching detail for", person.id);
       }
     }
+  }
+  
+  // If we get here, we couldn't find a new celebrity
+  if (lastValidCeleb) {
+    return lastValidCeleb;
   }
   return null;
 }
@@ -68,7 +82,19 @@ async function loadCard(cardId) {
   const celeb = await getRandomCelebrity();
 
   if (!celeb) {
-    card.innerHTML = `<p>No celeb found</p>`;
+    // Show the last selected card as the final choice
+    if (lastSelectedCardId) {
+      const finalCard = document.getElementById(lastSelectedCardId);
+      const celebrityName = finalCard.querySelector('h3').textContent;
+      const celebrityImage = finalCard.querySelector('img').src;
+      
+      document.getElementById('finalCelebrity').innerHTML = `
+        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 200px; border-radius: 8px; margin: 10px 0;">
+        <h3>${celebrityName}</h3>
+      `;
+      
+      document.getElementById('endGameMessage').style.display = 'block';
+    }
     return;
   }
 
@@ -78,8 +104,63 @@ async function loadCard(cardId) {
     <img src="${celeb.image}" alt="${celeb.name}" />
     <h3>${celeb.name}</h3>
   `;
+}
 
-  shownCelebs.add(celeb.id);
+function updateSelectionCount() {
+  selectionCount++;
+  document.getElementById('selectionCount').textContent = selectionCount;
+  document.getElementById('selectionProgress').style.width = `${(selectionCount / MAX_SELECTIONS) * 100}%`;
+  
+  if (selectionCount >= MAX_SELECTIONS) {
+    endGame();
+  }
+  
+  lastSelectionTime = Date.now();
+  resetIdleTimer();
+}
+
+function resetIdleTimer() {
+  if (idleTimer) clearTimeout(idleTimer);
+  idleTimer = setTimeout(checkIdle, IDLE_THRESHOLD);
+}
+
+function checkIdle() {
+  const timeSinceLastSelection = Date.now() - lastSelectionTime;
+  if (timeSinceLastSelection >= IDLE_THRESHOLD) {
+    // Use the last selected card for the final result
+    if (lastSelectedCardId) {
+      const finalCard = document.getElementById(lastSelectedCardId);
+      const celebrityName = finalCard.querySelector('h3').textContent;
+      const celebrityImage = finalCard.querySelector('img').src;
+      
+      document.getElementById('finalCelebrity').innerHTML = `
+        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 200px; border-radius: 8px; margin: 10px 0;">
+        <h3>${celebrityName}</h3>
+      `;
+      
+      document.getElementById('endGameMessage').style.display = 'block';
+    }
+  }
+}
+
+function endGame() {
+  const lastSelectedCard = document.querySelector('.card:last-child');
+  const celebrityName = lastSelectedCard.querySelector('h3').textContent;
+  const celebrityImage = lastSelectedCard.querySelector('img').src;
+  
+  document.getElementById('finalCelebrity').innerHTML = `
+    <img src="${celebrityImage}" alt="${celebrityName}" style="width: 200px; border-radius: 8px; margin: 10px 0;">
+    <h3>${celebrityName}</h3>
+  `;
+  
+  document.getElementById('endGameMessage').style.display = 'block';
+}
+
+function setupHoldOnButton() {
+  document.getElementById('holdOnButton').addEventListener('click', () => {
+    document.getElementById('endGameMessage').style.display = 'none';
+    resetIdleTimer();
+  });
 }
 
 function setupVoting() {
@@ -87,11 +168,15 @@ function setupVoting() {
   const card2 = document.getElementById("card2");
 
   card1.addEventListener("click", async () => {
+    lastSelectedCardId = "card1";
     await loadCard("card2");
+    updateSelectionCount();
   });
 
   card2.addEventListener("click", async () => {
+    lastSelectedCardId = "card2";
     await loadCard("card1");
+    updateSelectionCount();
   });
 }
 
@@ -125,7 +210,25 @@ function setupToggleButtons() {
   });
 }
 
+function setupSampleSizeControl() {
+  const slider = document.getElementById("sampleSizeSlider");
+  const display = document.getElementById("sampleSizeValue");
+  
+  slider.addEventListener("input", () => {
+    const value = parseInt(slider.value);
+    display.textContent = value;
+    maxPages = Math.ceil(value / 20); // 20 celebrities per page
+    shownCelebs.clear(); // Clear the shown celebrities when sample size changes
+  });
+}
+
+// Add mouse movement detection
+document.addEventListener('mousemove', resetIdleTimer);
+
 loadCard("card1");
 loadCard("card2");
 setupVoting();
 setupToggleButtons();
+setupSampleSizeControl();
+setupHoldOnButton();
+resetIdleTimer();

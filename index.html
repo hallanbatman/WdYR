@@ -10,14 +10,13 @@
     header img {
       max-width: 150px;
       height: auto;
-      margin-bottom: 5px;
     }
     .card-container {
       display: flex;
       justify-content: center;
       gap: 2rem;
       margin-top: 20px;
-      padding-bottom: 50px;
+      padding-bottom: 5px;
     }
     .card {
       background: #222;
@@ -25,7 +24,7 @@
       border-radius: 10px;
       cursor: pointer;
       transition: transform 0.2s;
-      width: 350px;
+      width: 300px;
       margin: 5px;
     }
     .card:hover { transform: scale(1.05); }
@@ -41,7 +40,6 @@
 .toggle-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
   padding: 0 1rem;
 }
 
@@ -77,6 +75,109 @@
   font-weight: bold;
 }
 
+.sample-size-control {
+  margin: 20px auto;
+  max-width: 600px;
+  padding: 0 1rem;
+}
+
+.sample-size-slider {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.sample-size-display {
+  color: #fff;
+  font-size: 0.9em;
+}
+
+.end-game-message {
+  position: fixed;
+  top: calc(50% + 45px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 1000;
+  display: none;
+  width: 90%;
+  max-width: 900px;
+}
+
+.end-game-message h2 {
+  color: #ff4d6d;
+  margin-bottom: 1rem;
+  font-size: 2.2em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
+}
+
+.end-game-message p {
+  margin-bottom: 1.5rem;
+  font-size: 1.3em;
+  color: #ffd700;
+}
+
+.end-game-message img {
+  width: 150%;
+  max-width: 750px;
+  border-radius: 8px;
+  margin: 20px 0;
+  transform: translateX(-25%);
+}
+
+.end-game-message h3 {
+  font-size: 2em;
+  margin: 10px 0;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.hold-on-button {
+  background: #ff4d6d;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  margin: 1rem;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.hold-on-button:hover {
+  background: #ff2d55;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 5px;
+  background: #333;
+  margin: 10px 0;
+  border-radius: 2px;
+}
+
+.progress {
+  height: 100%;
+  background: #7f3e9d;
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.selections-count {
+  color: #fff;
+  font-size: 0.9em;
+  margin: 10px 0;
+}
   </style>
 </head>
 <body>
@@ -84,17 +185,35 @@
     <img src="WdYR_Logo.png" alt="Celebrity Crush Logo" />
   </header>
 
-  <div class="toggle-container">
-  <div class="tri-state-toggle">
-    <button class="tri-state-toggle-button" data-gender="female">Female</button>
-    <button class="tri-state-toggle-button active" data-gender="both">Both</button>
-    <button class="tri-state-toggle-button" data-gender="male">Male</button>
+  <div class="selections-count">
+    Selections: <span id="selectionCount">0</span>/20
   </div>
-</div>
+  <div class="progress-bar">
+    <div class="progress" id="selectionProgress"></div>
+  </div>
+
+  <div class="toggle-container">
+    <div class="tri-state-toggle">
+      <button class="tri-state-toggle-button" data-gender="female">Female</button>
+      <button class="tri-state-toggle-button active" data-gender="both">Both</button>
+      <button class="tri-state-toggle-button" data-gender="male">Male</button>
+    </div>
+  </div>
   
   <div class="card-container">
     <div class="card" id="card1"></div>
     <div class="card" id="card2"></div>
+  </div>
+
+  <div class="sample-size-control">
+    <div class="sample-size-display">Sample Size: <span id="sampleSizeValue">500</span> celebrities</div>
+    <input type="range" class="sample-size-slider" id="sampleSizeSlider" 
+           min="20" max="1000" value="500" step="20">
+  </div>
+
+  <div class="end-game-message" id="endGameMessage">
+    <p id="finalCelebrity"></p>
+    <button class="hold-on-button" id="holdOnButton">Keep Playing!</button>
   </div>
 
   <script src="script.js"></script>
