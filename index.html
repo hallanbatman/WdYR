@@ -6,7 +6,7 @@
   <title>Who'd You Rather?</title>
   <style>
     body { font-family: sans-serif; text-align: center; background: #111; color: #fff; margin: 0; padding: 0; }
-    header { padding: 0.6em 0; }
+    header { padding: 0.6em 0; position: relative; z-index: 1001; }
     header img {
       max-width: 150px;
       height: auto;
@@ -93,9 +93,9 @@
 
 .end-game-message {
   position: fixed;
-  top: 65%;
+  top: 120px;  /* Position below the header */
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);  /* Only transform X to maintain vertical position */
   background: rgba(0, 0, 0, 0.9);
   padding: 20px;
   border-radius: 10px;
@@ -103,7 +103,7 @@
   z-index: 1000;
   width: 90%;
   max-width: 400px;
-  display: none;  /* Hide by default */
+  display: none;
 }
 
 .end-game-message h2 {
