@@ -89,7 +89,7 @@ async function loadCard(cardId) {
       const celebrityImage = finalCard.querySelector('img').src;
       
       document.getElementById('finalCelebrity').innerHTML = `
-        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 200px; border-radius: 8px; margin: 10px 0;">
+        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px;">
         <h3>${celebrityName}</h3>
       `;
       
@@ -134,7 +134,7 @@ function checkIdle() {
       const celebrityImage = finalCard.querySelector('img').src;
       
       document.getElementById('finalCelebrity').innerHTML = `
-        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 200px; border-radius: 8px; margin: 10px 0;">
+        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px;">
         <h3>${celebrityName}</h3>
       `;
       
@@ -149,7 +149,7 @@ function endGame() {
   const celebrityImage = lastSelectedCard.querySelector('img').src;
   
   document.getElementById('finalCelebrity').innerHTML = `
-    <img src="${celebrityImage}" alt="${celebrityName}" style="width: 200px; border-radius: 8px; margin: 10px 0;">
+    <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px;">
     <h3>${celebrityName}</h3>
   `;
   
