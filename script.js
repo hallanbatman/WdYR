@@ -98,7 +98,7 @@ async function loadCard(cardId) {
           <div style="position: relative; display: inline-block; max-width: 90%;">
             <img src="${celebrityImage}" alt="${celebrityName}" style="width: 100%; max-width: 300px; border-radius: 8px; display: block;">
           </div>
-          <h3 style="margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.5rem); word-wrap: break-word;">${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
+          <h3 style="margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.5rem); word-wrap: break-word;">${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C518" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>` : ''}</h3>
         </div>
       `;
       
@@ -115,7 +115,7 @@ async function loadCard(cardId) {
     <div class="card-image-container" style="position: relative; cursor: pointer;">
       <img src="${celeb.image}" alt="${celeb.name}" />
     </div>
-    <h3>${celeb.name}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
+    <h3>${celeb.name}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C518" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>` : ''}</h3>
   `;
 
   const imdbLinkElement = card.querySelector('.imdb-link');
@@ -159,7 +159,7 @@ function checkIdle() {
           <div style="position: relative; display: inline-block; max-width: 90%;">
             <img src="${celebrityImage}" alt="${celebrityName}" style="width: 100%; max-width: 300px; border-radius: 8px; display: block;">
           </div>
-          <h3 style="margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.5rem); word-wrap: break-word;">${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
+          <h3 style="margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.5rem); word-wrap: break-word;">${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C518" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>` : ''}</h3>
         </div>
       `;
       
@@ -182,7 +182,7 @@ function endGame() {
         <div style="position: relative; display: inline-block; max-width: 90%;">
           <img src="${celebrityImage}" alt="${celebrityName}" style="width: 100%; max-width: 300px; border-radius: 8px; display: block;">
         </div>
-        <h3 style="margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.5rem); word-wrap: break-word;">${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
+        <h3 style="margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.5rem); word-wrap: break-word;">${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C518" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>` : ''}</h3>
       </div>
     `;
     

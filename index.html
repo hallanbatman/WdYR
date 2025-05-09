@@ -102,7 +102,8 @@
   text-align: center;
   z-index: 1000;
   width: 90%;
-  max-width: 400px;
+  max-width: 750px;
+  height: 630px;
   display: none;
 }
 
@@ -113,19 +114,18 @@
 }
 
 .end-game-message button {
-  background: #4CAF50;
+  background: #7f3e9d;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
   font-size: clamp(0.9rem, 3vw, 1rem);
-  margin-top: 10px;
   transition: background 0.3s;
 }
 
 .end-game-message button:hover {
-  background: #45a049;
+  background: #7b2ca0;
 }
 
 #finalCelebrity {
@@ -192,14 +192,14 @@
   </div>
 
   <div class="sample-size-control">
-    <div class="sample-size-display">Sample Size: <span id="sampleSizeValue">500</span> celebrities</div>
+    <div class="sample-size-display">Celebritie Pool: <span id="sampleSizeValue">500</span></div>
     <input type="range" class="sample-size-slider" id="sampleSizeSlider" 
            min="20" max="1000" value="500" step="20">
   </div>
 
   <div class="end-game-message" id="endGameMessage">
     <p id="finalCelebrity"></p>
-    <button class="hold-on-button" id="holdOnButton">Keep Playing!</button>
+    <button class="hold-on-button" id="holdOnButton">KEEP PLAYING</button>
   </div>
 
   <script src="script.js"></script>
