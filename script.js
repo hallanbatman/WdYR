@@ -9,6 +9,7 @@ let idleTimer = null;
 const IDLE_THRESHOLD = 10000; // 10 seconds of inactivity
 const MAX_SELECTIONS = 20;
 let lastSelectedCardId = null; // Track the last selected card
+let gameEnded = false; // Flag to track if game has ended
 
 function getGenderCode(gender) {
   if (gender === "female") return 1;
@@ -108,7 +109,6 @@ async function loadCard(cardId) {
 
 function updateSelectionCount() {
   selectionCount++;
-  document.getElementById('selectionCount').textContent = selectionCount;
   document.getElementById('selectionProgress').style.width = `${(selectionCount / MAX_SELECTIONS) * 100}%`;
   
   if (selectionCount >= MAX_SELECTIONS) {
@@ -125,6 +125,8 @@ function resetIdleTimer() {
 }
 
 function checkIdle() {
+  if (gameEnded) return; // Don't check for idle if game has ended
+  
   const timeSinceLastSelection = Date.now() - lastSelectionTime;
   if (timeSinceLastSelection >= IDLE_THRESHOLD) {
     // Use the last selected card for the final result
@@ -139,26 +141,43 @@ function checkIdle() {
       `;
       
       document.getElementById('endGameMessage').style.display = 'block';
+      gameEnded = true;
+      if (idleTimer) clearTimeout(idleTimer);
     }
   }
 }
 
 function endGame() {
-  const lastSelectedCard = document.querySelector('.card:last-child');
-  const celebrityName = lastSelectedCard.querySelector('h3').textContent;
-  const celebrityImage = lastSelectedCard.querySelector('img').src;
-  
-  document.getElementById('finalCelebrity').innerHTML = `
-    <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px;">
-    <h3>${celebrityName}</h3>
-  `;
-  
-  document.getElementById('endGameMessage').style.display = 'block';
+  if (lastSelectedCardId) {
+    const finalCard = document.getElementById(lastSelectedCardId);
+    const celebrityName = finalCard.querySelector('h3').textContent;
+    const celebrityImage = finalCard.querySelector('img').src;
+    
+    document.getElementById('finalCelebrity').innerHTML = `
+      <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px;">
+      <h3>${celebrityName}</h3>
+    `;
+    
+    document.getElementById('endGameMessage').style.display = 'block';
+    gameEnded = true;
+    if (idleTimer) clearTimeout(idleTimer);
+  }
 }
 
 function setupHoldOnButton() {
-  document.getElementById('holdOnButton').addEventListener('click', () => {
+  document.getElementById('holdOnButton').addEventListener('click', async () => {
     document.getElementById('endGameMessage').style.display = 'none';
+    selectionCount = 0;
+    document.getElementById('selectionProgress').style.width = '0%';
+    gameEnded = false;
+    
+    // Keep the winning card and load one new card
+    const winningCardId = lastSelectedCardId;
+    const otherCardId = winningCardId === "card1" ? "card2" : "card1";
+    
+    // Load a new card for the non-winning position
+    await loadCard(otherCardId);
+    
     resetIdleTimer();
   });
 }
@@ -196,16 +215,15 @@ function setupToggleButtons() {
       const card1Gender = document.getElementById("card1").getAttribute('data-gender');
       const card2Gender = document.getElementById("card2").getAttribute('data-gender');
 
-      if (selectedGender === "both") {
-        if (card1Gender === "1") {
-          await loadCard("card2");
-        } else {
-          await loadCard("card1");
-        }
-      } else {
-        await loadCard("card1");
-        await loadCard("card2");
+      // Only change cards if they don't match the new gender selection
+      if (selectedGender === "female") {
+        if (card1Gender !== "1") await loadCard("card1");
+        if (card2Gender !== "1") await loadCard("card2");
+      } else if (selectedGender === "male") {
+        if (card1Gender !== "2") await loadCard("card1");
+        if (card2Gender !== "2") await loadCard("card2");
       }
+      // No need to change cards when switching to "both" as both genders are allowed
     });
   });
 }
