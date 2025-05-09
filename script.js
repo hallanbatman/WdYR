@@ -94,10 +94,12 @@ async function loadCard(cardId) {
       const imdbLink = finalCard.querySelector('.imdb-link')?.href || '';
       
       document.getElementById('finalCelebrity').innerHTML = `
-        <div style="position: relative; display: inline-block;">
-          <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px; display: block;">
+        <div class="winner-container" style="text-align: center; max-width: 100%;">
+          <div style="position: relative; display: inline-block; max-width: 90%;">
+            <img src="${celebrityImage}" alt="${celebrityName}" style="width: 100%; max-width: 300px; border-radius: 8px; display: block;">
+          </div>
+          <h3 style="margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.5rem); word-wrap: break-word;">${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
         </div>
-        <h3>${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
       `;
       
       document.getElementById('endGameMessage').style.display = 'block';
@@ -116,7 +118,6 @@ async function loadCard(cardId) {
     <h3>${celeb.name}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
   `;
 
-  // Add click handler to IMDB link to stop event propagation
   const imdbLinkElement = card.querySelector('.imdb-link');
   if (imdbLinkElement) {
     imdbLinkElement.addEventListener('click', (event) => {
@@ -154,10 +155,12 @@ function checkIdle() {
       const imdbLink = finalCard.querySelector('.imdb-link')?.href || '';
       
       document.getElementById('finalCelebrity').innerHTML = `
-        <div style="position: relative; display: inline-block;">
-          <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px; display: block;">
+        <div class="winner-container" style="text-align: center; max-width: 100%;">
+          <div style="position: relative; display: inline-block; max-width: 90%;">
+            <img src="${celebrityImage}" alt="${celebrityName}" style="width: 100%; max-width: 300px; border-radius: 8px; display: block;">
+          </div>
+          <h3 style="margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.5rem); word-wrap: break-word;">${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
         </div>
-        <h3>${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
       `;
       
       document.getElementById('endGameMessage').style.display = 'block';
@@ -175,10 +178,12 @@ function endGame() {
     const imdbLink = finalCard.querySelector('.imdb-link')?.href || '';
     
     document.getElementById('finalCelebrity').innerHTML = `
-      <div style="position: relative; display: inline-block;">
-        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px; display: block;">
+      <div class="winner-container" style="text-align: center; max-width: 100%;">
+        <div style="position: relative; display: inline-block; max-width: 90%;">
+          <img src="${celebrityImage}" alt="${celebrityName}" style="width: 100%; max-width: 300px; border-radius: 8px; display: block;">
+        </div>
+        <h3 style="margin: 10px 0; font-size: clamp(1.2rem, 4vw, 1.5rem); word-wrap: break-word;">${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
       </div>
-      <h3>${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
     `;
     
     document.getElementById('endGameMessage').style.display = 'block';
@@ -194,11 +199,9 @@ function setupHoldOnButton() {
     document.getElementById('selectionProgress').style.width = '0%';
     gameEnded = false;
     
-    // Keep the winning card and load one new card
     const winningCardId = lastSelectedCardId;
     const otherCardId = winningCardId === "card1" ? "card2" : "card1";
     
-    // Always increase sample size by 40, up to the maximum
     const currentSampleSize = parseInt(document.getElementById('sampleSizeValue').textContent);
     const newSampleSize = Math.min(MAX_POSSIBLE_SAMPLE, currentSampleSize + 40);
     
@@ -208,7 +211,6 @@ function setupHoldOnButton() {
       maxPages = Math.ceil(newSampleSize / 20);
     }
     
-    // Load a new card for the non-winning position
     await loadCard(otherCardId);
     
     resetIdleTimer();

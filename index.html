@@ -93,66 +93,57 @@
 
 .end-game-message {
   position: fixed;
-  top: calc(50% + 45px);
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.9);
-  padding: 2rem;
+  padding: 20px;
   border-radius: 10px;
   text-align: center;
   z-index: 1000;
-  display: none;
-  width: 300%;
-  max-width: 900px;
+  width: 90%;
+  max-width: 400px;
+  display: none;  /* Hide by default */
 }
 
 .end-game-message h2 {
-  color: #ff4d6d;
-  margin-bottom: 1rem;
-  font-size: 2.2em;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
+  color: white;
+  margin-bottom: 15px;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
 
-.end-game-message p {
-  margin-bottom: 1.5rem;
-  font-size: 1.3em;
-  color: #ffd700;
-}
-
-.end-game-message img {
-  width: 300%;
-  max-width: 750px;
-  border-radius: 8px;
-}
-
-.end-game-message h3 {
-  font-size: 2em;
-  margin: 10px 0;
-  color: #fff;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-}
-
-.hold-on-button {
-  background: #ff4d6d;
+.end-game-message button {
+  background: #4CAF50;
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 25px;
+  padding: 8px 16px;
+  border-radius: 5px;
   cursor: pointer;
-  margin: 1rem;
-  font-size: 1.1em;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  margin-top: 10px;
+  transition: background 0.3s;
 }
 
-.hold-on-button:hover {
-  background: #ff2d55;
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
+.end-game-message button:hover {
+  background: #45a049;
+}
+
+#finalCelebrity {
+  margin: 15px 0;
+}
+
+#finalCelebrity img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 8px;
+  margin: 0 auto;
+}
+
+#finalCelebrity h3 {
+  margin: 10px 0;
+  color: white;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  word-wrap: break-word;
 }
 
 .progress-bar {
