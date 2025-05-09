@@ -8,6 +8,7 @@ let lastSelectionTime = Date.now();
 let idleTimer = null;
 const IDLE_THRESHOLD = 10000; // 10 seconds of inactivity
 const MAX_SELECTIONS = 20;
+const MAX_POSSIBLE_SAMPLE = 1000; // Maximum possible sample size
 let lastSelectedCardId = null; // Track the last selected card
 let gameEnded = false; // Flag to track if game has ended
 
@@ -30,8 +31,10 @@ function calculateAge(birthday) {
 
 async function getRandomCelebrity() {
   let lastValidCeleb = null;
+  let attempts = 0;
+  const maxAttempts = 50;
   
-  for (let i = 0; i < 20; i++) {
+  while (attempts < maxAttempts) {
     const page = Math.floor(Math.random() * maxPages) + 1;
     const res = await fetch(`${apiUrl}/api/popular?page=${page}`);
     const data = await res.json();
@@ -59,7 +62,8 @@ async function getRandomCelebrity() {
             image: `https://image.tmdb.org/t/p/w500${person.profile_path}`,
             id: person.id,
             gender: person.gender,
-            age
+            age,
+            imdb_id: detail.imdb_id
           };
           lastValidCeleb = celeb;
           shownCelebs.add(person.id);
@@ -69,9 +73,9 @@ async function getRandomCelebrity() {
         console.warn("Error fetching detail for", person.id);
       }
     }
+    attempts++;
   }
   
-  // If we get here, we couldn't find a new celebrity
   if (lastValidCeleb) {
     return lastValidCeleb;
   }
@@ -83,15 +87,17 @@ async function loadCard(cardId) {
   const celeb = await getRandomCelebrity();
 
   if (!celeb) {
-    // Show the last selected card as the final choice
     if (lastSelectedCardId) {
       const finalCard = document.getElementById(lastSelectedCardId);
       const celebrityName = finalCard.querySelector('h3').textContent;
       const celebrityImage = finalCard.querySelector('img').src;
+      const imdbLink = finalCard.querySelector('.imdb-link')?.href || '';
       
       document.getElementById('finalCelebrity').innerHTML = `
-        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px;">
-        <h3>${celebrityName}</h3>
+        <div style="position: relative; display: inline-block;">
+          <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px; display: block;">
+        </div>
+        <h3>${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
       `;
       
       document.getElementById('endGameMessage').style.display = 'block';
@@ -101,10 +107,22 @@ async function loadCard(cardId) {
 
   card.setAttribute('data-gender', celeb.gender);
 
+  const imdbLink = celeb.imdb_id ? `https://www.imdb.com/name/${celeb.imdb_id}/` : '';
+  
   card.innerHTML = `
-    <img src="${celeb.image}" alt="${celeb.name}" />
-    <h3>${celeb.name}</h3>
+    <div class="card-image-container" style="position: relative; cursor: pointer;">
+      <img src="${celeb.image}" alt="${celeb.name}" />
+    </div>
+    <h3>${celeb.name}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
   `;
+
+  // Add click handler to IMDB link to stop event propagation
+  const imdbLinkElement = card.querySelector('.imdb-link');
+  if (imdbLinkElement) {
+    imdbLinkElement.addEventListener('click', (event) => {
+      event.stopPropagation();
+    });
+  }
 }
 
 function updateSelectionCount() {
@@ -125,19 +143,21 @@ function resetIdleTimer() {
 }
 
 function checkIdle() {
-  if (gameEnded) return; // Don't check for idle if game has ended
+  if (gameEnded) return;
   
   const timeSinceLastSelection = Date.now() - lastSelectionTime;
   if (timeSinceLastSelection >= IDLE_THRESHOLD) {
-    // Use the last selected card for the final result
     if (lastSelectedCardId) {
       const finalCard = document.getElementById(lastSelectedCardId);
       const celebrityName = finalCard.querySelector('h3').textContent;
       const celebrityImage = finalCard.querySelector('img').src;
+      const imdbLink = finalCard.querySelector('.imdb-link')?.href || '';
       
       document.getElementById('finalCelebrity').innerHTML = `
-        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px;">
-        <h3>${celebrityName}</h3>
+        <div style="position: relative; display: inline-block;">
+          <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px; display: block;">
+        </div>
+        <h3>${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
       `;
       
       document.getElementById('endGameMessage').style.display = 'block';
@@ -152,10 +172,13 @@ function endGame() {
     const finalCard = document.getElementById(lastSelectedCardId);
     const celebrityName = finalCard.querySelector('h3').textContent;
     const celebrityImage = finalCard.querySelector('img').src;
+    const imdbLink = finalCard.querySelector('.imdb-link')?.href || '';
     
     document.getElementById('finalCelebrity').innerHTML = `
-      <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px;">
-      <h3>${celebrityName}</h3>
+      <div style="position: relative; display: inline-block;">
+        <img src="${celebrityImage}" alt="${celebrityName}" style="width: 300px; border-radius: 8px; display: block;">
+      </div>
+      <h3>${celebrityName}${imdbLink ? `<a href="${imdbLink}" target="_blank" class="imdb-link" style="margin-left: 8px; display: inline-flex; align-items: center; vertical-align: middle;"><img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDB" style="height: 16px;"></a>` : ''}</h3>
     `;
     
     document.getElementById('endGameMessage').style.display = 'block';
@@ -175,6 +198,16 @@ function setupHoldOnButton() {
     const winningCardId = lastSelectedCardId;
     const otherCardId = winningCardId === "card1" ? "card2" : "card1";
     
+    // Always increase sample size by 40, up to the maximum
+    const currentSampleSize = parseInt(document.getElementById('sampleSizeValue').textContent);
+    const newSampleSize = Math.min(MAX_POSSIBLE_SAMPLE, currentSampleSize + 40);
+    
+    if (newSampleSize > currentSampleSize) {
+      document.getElementById('sampleSizeValue').textContent = newSampleSize;
+      document.getElementById('sampleSizeSlider').value = newSampleSize;
+      maxPages = Math.ceil(newSampleSize / 20);
+    }
+    
     // Load a new card for the non-winning position
     await loadCard(otherCardId);
     
@@ -186,16 +219,22 @@ function setupVoting() {
   const card1 = document.getElementById("card1");
   const card2 = document.getElementById("card2");
 
-  card1.addEventListener("click", async () => {
-    lastSelectedCardId = "card1";
-    await loadCard("card2");
-    updateSelectionCount();
+  card1.addEventListener("click", async (event) => {
+    // Only trigger if clicking the image or its container
+    if (event.target.tagName === 'IMG' || event.target.classList.contains('card-image-container')) {
+      lastSelectedCardId = "card1";
+      await loadCard("card2");
+      updateSelectionCount();
+    }
   });
 
-  card2.addEventListener("click", async () => {
-    lastSelectedCardId = "card2";
-    await loadCard("card1");
-    updateSelectionCount();
+  card2.addEventListener("click", async (event) => {
+    // Only trigger if clicking the image or its container
+    if (event.target.tagName === 'IMG' || event.target.classList.contains('card-image-container')) {
+      lastSelectedCardId = "card2";
+      await loadCard("card1");
+      updateSelectionCount();
+    }
   });
 }
 
