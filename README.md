@@ -1,8 +1,11 @@
-# Who'd You Rather? 🎮
+# Who'd You Rather?
+Celebrity Crush Finder Game.
+
+[HallanBatman.GitHub.io/Whod.You.Rather](https://hallanbatman.github.io/Whod.You.Rather/)
 
 A modern, interactive celebrity comparison game that helps you discover your preferences through a series of choices. Built with vanilla JavaScript and powered by TMDB's extensive celebrity database.
 
-![Game Preview](winner.jpg)
+![Game Preview](https://raw.githubusercontent.com/hallanbatman/Whod.You.Rather/refs/heads/main/GamePreview/gamepreview.jpg)
 
 ## ✨ Features
 
@@ -58,4 +61,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-Made by Hallan Batman | github.com/hallanbatman
+Made by Hallan Batman | [github.com/hallanbatman](https://github.com/hallanbatman)
